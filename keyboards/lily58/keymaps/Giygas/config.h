@@ -26,14 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 // #define EE_HANDS
 
-#define OLED_DISABLE_TIMEOUT
 
-#define USE_SERIAL_PD2
+#define SPLIT_WPM_ENABLE
 
 #define TAPPING_FORCE_HOLD
 #define TAPPING_TERM 120
 
-#define EE_HANDS
 
 #undef RGBLED_NUM
 // #define RGBLIGHT_ANIMATIONS
