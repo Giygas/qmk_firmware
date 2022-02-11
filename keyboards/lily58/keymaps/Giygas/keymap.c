@@ -388,12 +388,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case QWE:
       if (record->event.pressed) {
         default_layer_set(_QWERTY);
-        deflayout = 0;
+        deflayout = 0;                    //Used for LEFT OLED default layout
         layer_move(_QWERTY);
         return false;
       }
       break;
-    case COL:
+    case COL:de
       if (record->event.pressed) {
         default_layer_set(_COLEMAK);
         deflayout = 1;
@@ -403,8 +403,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     case CMB_OFF:
       if (record->event.pressed) {
-        combstatus=false;
-        if (IS_LAYER_ON(_QWERTY)) {
+        combstatus=false;                 //Used for LEFT OLED COMBO status
+        if (IS_LAYER_ON(_QWERTY)) {       //Detects base layer and goes there
           layer_move(_QWERTY);
         } else {
           layer_move(_COLEMAK);
@@ -413,7 +413,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
        }
        break;
     case CMB_ON:
-    
       if (record->event.pressed) {
         combstatus=true;
         if (IS_LAYER_ON(_QWERTY)) {
