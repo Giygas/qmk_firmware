@@ -185,10 +185,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //DISPLAY RELATED
 
-
-  #define WPM 15 // si current_wpm >= WPM entonces el gato empieza a tocar el keyboard
-  #define ANIM_FRAME_DURATION 200 // cuanto tiempo mostrar cada frame
-  #define ANIM_SIZE_CAT 320 // numero de pixeles en cada frame del gato
+  #define WPM 15 // Miñimun wpm for start )
+  #define ANIM_FRAME_DURATION 200 // Frame time
+  #define ANIM_SIZE_CAT 320 // Pixels in cat frames
 
   uint32_t anim_cat_timer;
   uint32_t anim_cat_sleep;
@@ -250,9 +249,9 @@ static void print_status_narrow(void) {
 
 //Animation Function
 
-static void render_cat(void) { // esta funcion contiene los frames y logica de la animacion del gato
+static void render_cat(void) { 
 
-    static const char PROGMEM idle[1][ANIM_SIZE_CAT] = { // frames de idle
+    static const char PROGMEM idle[1][ANIM_SIZE_CAT] = { // Idle frames
         {
         0x00, 0xc0, 0x3e, 0x01, 0x00, 0x00, 0x00, 0xc0, 0xfc, 0x03, 0x00, 0x03, 0x0c, 0x30, 0xc0, 0x00,
         0xe1, 0x1e, 0x00, 0xc0, 0xbc, 0x83, 0x80, 0x80, 0x80, 0x80, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -277,7 +276,7 @@ static void render_cat(void) { // esta funcion contiene los frames y logica de l
         }
     };
 
-    static const char PROGMEM tap[2][ANIM_SIZE_CAT] = { // frames de tap
+    static const char PROGMEM tap[2][ANIM_SIZE_CAT] = { // Tapping frames
         {
         0x00, 0xc0, 0x3e, 0x01, 0x00, 0x00, 0x00, 0xc0, 0xfc, 0xff, 0xff, 0xff, 0x7c, 0x70, 0x40, 0x40,
         0x61, 0x5e, 0x80, 0xc0, 0xbc, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -324,15 +323,15 @@ static void render_cat(void) { // esta funcion contiene los frames y logica de l
         },
     };
 
-    void animate_cat(void) { // logica de la animacion del gato
+    void animate_cat(void) { 
         
-        if(current_wpm < WPM){ // si current_wpm menor a WPM
-            oled_write_raw_P(idle[0], ANIM_SIZE_CAT); // gato en idle (solo hay un frame en esta accion)
+        if(current_wpm < WPM){ 
+            oled_write_raw_P(idle[0], ANIM_SIZE_CAT); // Idle cat
          }
 
-         if(current_wpm >= WPM){ // si current_wpm mayor o igual a WPM
-             current_cat_frame = (current_cat_frame + 1) % 2; //para alternar entre los 2 frames de tap
-             oled_write_raw_P(tap[abs((2-1)-current_cat_frame)], ANIM_SIZE_CAT); // gato haciendo tap
+         if(current_wpm >= WPM){ 
+             current_cat_frame = (current_cat_frame + 1) % 2; 
+             oled_write_raw_P(tap[abs((2-1)-current_cat_frame)], ANIM_SIZE_CAT); // Aternating between the two frames
          }
     }
 
@@ -364,6 +363,7 @@ static void render_wpm(void) {
 
 bool oled_task_user(void) { 
   current_wpm = get_current_wpm();
+
   if ((timer_elapsed32(anim_cat_sleep) > 60000) && (current_wpm == 0) ) {
       if (is_oled_on()) {
           oled_off();
