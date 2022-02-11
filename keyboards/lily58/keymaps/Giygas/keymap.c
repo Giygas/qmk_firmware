@@ -364,23 +364,23 @@ static void render_wpm(void) {
 bool oled_task_user(void) { 
   current_wpm = get_current_wpm();
 
-  if ((timer_elapsed32(anim_cat_sleep) > 60000) && (current_wpm == 0) ) {
-      if (is_oled_on()) {
-          oled_off();
-      }    
-      timer_init();
-      return false;
-  }
+  // if ((timer_elapsed32(anim_cat_sleep) > 60000) && (current_wpm == 0) ) {
+  //     if (is_oled_on()) {
+  //         oled_off();
+  //     }    
+  //     timer_init();
+  //     return false;
+  // }
   
-  if (current_wpm != 0 && !is_oled_on()) {
-      oled_on();
-  }
+  // if (current_wpm != 0 && !is_oled_on()) {
+  //     oled_on();
+  // }
 
   if (is_keyboard_master()) {
       print_status_narrow();
   } else {
     render_cat(); 
-    oled_set_cursor(0,11);
+    oled_set_cursor(0,12);
     render_wpm(); 
   }
   return false; 

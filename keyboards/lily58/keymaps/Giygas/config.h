@@ -28,9 +28,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #define SPLIT_WPM_ENABLE
+#define SPLIT_OLED_ENABLE
+// #define OLED_DISABLE_TIMEOUT
 
 #define TAPPING_FORCE_HOLD
-#define TAPPING_TERM 120
+#define TAPPING_TERM 180
 
 
 #undef RGBLED_NUM
