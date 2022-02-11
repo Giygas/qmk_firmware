@@ -26,8 +26,8 @@ enum keycode {
 // Combos Definitions
 enum combos {
 FTAB,
-// DESKR,
-// DESKL,
+DESKR,
+DESKL,
 FCOPY,
 FPASTE,
 FCUT,
@@ -35,8 +35,8 @@ CTRLZ,
 };
 
 const uint16_t PROGMEM ftab_combo[]   = {KC_F, KC_TAB, COMBO_END};
-// const uint16_t PROGMEM deskr_combo[]  = {KC_LGUI, KC_RBRC, COMBO_END};
-// const uint16_t PROGMEM deskl_combo[]  = {KC_LGUI, KC_LBRC, COMBO_END};
+const uint16_t PROGMEM deskr_combo[]  = {KC_LGUI, KC_RBRC, COMBO_END};
+const uint16_t PROGMEM deskl_combo[]  = {KC_LGUI, KC_LBRC, COMBO_END};
 const uint16_t PROGMEM fcopy_combo[]  = {KC_F, KC_C, COMBO_END};
 const uint16_t PROGMEM fpaste_combo[] = {KC_F, KC_V, COMBO_END};
 const uint16_t PROGMEM fcut_combo[] = {KC_F, KC_X, COMBO_END};
@@ -44,8 +44,8 @@ const uint16_t PROGMEM ctrlz_combo[] = {KC_F, KC_Z, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
   [FTAB]   = COMBO(ftab_combo,   A(KC_TAB)),
-  // [DESKR]  = COMBO(deskr_combo,  C(G(KC_RIGHT))),
-  // [DESKL]  = COMBO(deskl_combo,  C(G(KC_LEFT))),
+  [DESKR]  = COMBO(deskr_combo,  C(G(KC_RIGHT))),
+  [DESKL]  = COMBO(deskl_combo,  C(G(KC_LEFT))),
   [FCOPY]  = COMBO(fcopy_combo,  C(KC_C)),
   [FPASTE] = COMBO(fpaste_combo, C(KC_V)),
   [FCUT]   = COMBO(fcut_combo, C(KC_X)),
@@ -168,9 +168,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //DISPLAY RELATED
 
-#ifdef OLED_ENABLE
+
+  #define WPM 15 // si current_wpm >= WPM entonces el gato empieza a tocar el keyboard
+  #define ANIM_FRAME_DURATION 200 // cuanto tiempo mostrar cada frame
+  #define ANIM_SIZE_CAT 320 // numero de pixeles en cada frame del gato
+
+  uint32_t anim_cat_timer;
+  uint32_t anim_cat_sleep;
+  uint8_t current_cat_frame = 0;
+  uint8_t current_wpm = 0;
   char wpm_str[4];
-  #include <stdio.h>
+  
 // oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 //   if (!is_keyboard_master())
 //     return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
@@ -225,31 +233,9 @@ static void print_status_narrow(void) {
 
 //Animation Function
 
-/* Animation bit by j-inc https://github.com/qmk/qmk_firmware/tree/master/keyboards/kyria/keymaps/j-inc */
-// WPM-responsive animation stuff here
-#define IDLE_FRAMES 5
-#define IDLE_SPEED 40 // below this wpm value your animation will idle
+static void render_cat(void) { // esta funcion contiene los frames y logica de la animacion del gato
 
-// #define PREP_FRAMES 1 // uncomment if >1
-
-#define TAP_FRAMES 2
-#define TAP_SPEED 60 // above this wpm value typing animation to triggere
-
-#define ANIM_FRAME_DURATION 200 // how long each frame lasts in ms
-// #define SLEEP_TIMER 60000 // should sleep after this period of 0 wpm, needs fixing
-#define ANIM_SIZE 350 // number of bytes in array, minimize for adequate firmware size, max is 1024
-
-uint32_t anim_timer = 0;
-uint32_t anim_sleep = 0;
-uint8_t current_idle_frame = 0;
-// uint8_t current_prep_frame = 0; // uncomment if PREP_FRAMES >1
-uint8_t current_tap_frame = 0;
-
-// Implementation credit j-inc(/James Incandenza), pixelbenny, and obosob.
-// Bongo cat images changed and adapted for sofle keyboard oled size.
-// Original gif can be found here: https://www.pixilart.com/art/bongo-cat-bd2a8e9323aa705
-static void render_anim(void) {
-    static const char PROGMEM idle[IDLE_FRAMES][ANIM_SIZE] = {
+    static const char PROGMEM idle[1][ANIM_SIZE_CAT] = { // frames de idle
         {
         0x00, 0xc0, 0x3e, 0x01, 0x00, 0x00, 0x00, 0xc0, 0xfc, 0x03, 0x00, 0x03, 0x0c, 0x30, 0xc0, 0x00,
         0xe1, 0x1e, 0x00, 0xc0, 0xbc, 0x83, 0x80, 0x80, 0x80, 0x80, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -273,7 +259,8 @@ static void render_anim(void) {
         0x01, 0x01, 0x01, 0x01, 0x01, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x04, 0x02, 0x01,
         }
     };
-    static const char PROGMEM tap[TAP_FRAMES][ANIM_SIZE] = {
+
+    static const char PROGMEM tap[2][ANIM_SIZE_CAT] = { // frames de tap
         {
         0x00, 0xc0, 0x3e, 0x01, 0x00, 0x00, 0x00, 0xc0, 0xfc, 0xff, 0xff, 0xff, 0x7c, 0x70, 0x40, 0x40,
         0x61, 0x5e, 0x80, 0xc0, 0xbc, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -320,55 +307,65 @@ static void render_anim(void) {
         },
     };
 
-    //assumes 1 frame prep stage
-    void animation_phase(void) {
-        if(get_current_wpm() <=IDLE_SPEED){
-            /*
-            current_idle_frame = (current_idle_frame + 1) % IDLE_FRAMES;
-            oled_write_raw_P(idle[abs((IDLE_FRAMES-1)-current_idle_frame)], ANIM_SIZE);
-            */
-            oled_write_raw_P(idle[0], ANIM_SIZE);
+    void animate_cat(void) { // logica de la animacion del gato
+        
+        if(current_wpm < WPM){ // si current_wpm menor a WPM
+            oled_write_raw_P(idle[0], ANIM_SIZE_CAT); // gato en idle (solo hay un frame en esta accion)
          }
-         /*
-         if(get_current_wpm() >IDLE_SPEED && get_current_wpm() <TAP_SPEED){
-             // oled_write_raw_P(prep[abs((PREP_FRAMES-1)-current_prep_frame)], ANIM_SIZE); // uncomment if IDLE_FRAMES >1
-             oled_write_raw_P(prep[0], ANIM_SIZE);  // remove if IDLE_FRAMES >1
-         }*/
-         if(get_current_wpm() >=TAP_SPEED){
-             current_tap_frame = (current_tap_frame + 1) % TAP_FRAMES;
-             oled_write_raw_P(tap[abs((TAP_FRAMES-1)-current_tap_frame)], ANIM_SIZE);
+
+         if(current_wpm >= WPM){ // si current_wpm mayor o igual a WPM
+             current_cat_frame = (current_cat_frame + 1) % 2; //para alternar entre los 2 frames de tap
+             oled_write_raw_P(tap[abs((2-1)-current_cat_frame)], ANIM_SIZE_CAT); // gato haciendo tap
          }
     }
-    if(get_current_wpm() != 000) {
-        oled_on(); // not essential but turns on animation OLED with any alpha keypress
-        if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-            anim_timer = timer_read32();
-            animation_phase();
+
+    if (current_wpm != 0) {
+        if (timer_elapsed32(anim_cat_timer) > ANIM_FRAME_DURATION) {
+            anim_cat_timer = timer_read32();
+            animate_cat();
         }
-        anim_sleep = timer_read32();
+        anim_cat_sleep = timer_read32();
     } else {
-        if(timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
-            oled_off();
-        } else {
-            if(timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
-                anim_timer = timer_read32();
-                animation_phase();
-            }
-        }
-    }
-}
+        if (timer_elapsed32(anim_cat_timer) > ANIM_FRAME_DURATION) {
+            anim_cat_timer = timer_read32();
+            animate_cat();
+        }    
+    }    
+}            
+
+static void render_wpm(void) {
+    oled_write("WPM\n", false);
+    wpm_str[3] = '\0';
+    wpm_str[2] = '0' + current_wpm % 10;
+    wpm_str[1] = '0' + ( current_wpm /= 10) % 10;
+    wpm_str[0] = '0' + current_wpm / 10;
+    oled_write(wpm_str, false); //WPM PRINT
+}  
 
 /////////////////////////////////////////////////////////////////
+#ifdef OLED_ENABLE
 
 bool oled_task_user(void) { 
+  
+  current_wpm = get_current_wpm();
+  if ((timer_elapsed32(anim_cat_sleep) > 60000) && (current_wpm == 0) ) {
+      if (is_oled_on()) {
+          oled_off();
+      }    
+      timer_init();
+      return false;
+  }
+  
+  if (current_wpm != 0 && !is_oled_on()) {
+      oled_on();
+  }
+
   if (is_keyboard_master()) {
-        print_status_narrow();
+      print_status_narrow();
   } else {
-    //oled_write(read_logo(), false);
-    render_anim();
-    oled_set_cursor(0,12);
-    sprintf(wpm_str, "WPM\n%03d", get_current_wpm());
-    oled_write(wpm_str, false);
+    render_cat(); 
+    oled_set_cursor(0,11);
+    render_wpm(); 
   }
   return false; 
 }
@@ -393,7 +390,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
       }
       break;
-    case COL:de
+    case COL:
       if (record->event.pressed) {
         default_layer_set(_COLEMAK);
         deflayout = 1;

@@ -26,8 +26,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define MASTER_RIGHT
 // #define EE_HANDS
 
+#define OLED_DISABLE_TIMEOUT
+
+#define USE_SERIAL_PD2
+
 #define TAPPING_FORCE_HOLD
 #define TAPPING_TERM 120
+
+#define EE_HANDS
 
 #undef RGBLED_NUM
 // #define RGBLIGHT_ANIMATIONS
@@ -38,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define RGBLIGHT_VAL_STEP 17
 
 // Defining number of combos
-#define COMBO_COUNT 5
+#define COMBO_COUNT 7
 
 
 #ifndef NO_DEBUG
