@@ -125,7 +125,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |  F11 |  F1  |  F2  |  F3  |  F4  |  F5  |-------.    ,-------|   +  | LEFT | DOWN | RIGHT| CTRL |      |
  * |------+------+------+------+------+------| VOL + |    | VOL - |------+------+------+------+------+------|
- * |  F12 |  F6  |  F7  |  F8  |  F9  |  F10 |-------|    |-------|   |  |  -   | CAPS |      |      |      |
+ * |  F12 |  F6  |  F7  |  F8  |  F9  |  F10 |-------|    |-------|   |  |  -   | CAPS |      |  /   |      |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   |      |      |      | /       /       \      \  | DEL |      |      |
  *                   |      |      |      |/       /         \      \ |     |      |      |
@@ -135,7 +135,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, _______, _______, _______, _______, _______,                                      KC_PAST, XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX,  KC_BRIGHTNESS_UP,
   KC_LSFT,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,                                     KC_EQUAL, KC_HOME,   KC_UP,  KC_END,  XXXXXXX,KC_BRIGHTNESS_DOWN,
    KC_F11,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                                      KC_PPLS, KC_LEFT, KC_DOWN,KC_RIGHT,  KC_RCTL,           XXXXXXX,
-   KC_F12,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, KC_KB_VOLUME_UP, KC_KB_VOLUME_DOWN,  KC_NUBS, KC_PMNS, KC_CAPS, XXXXXXX,  XXXXXXX,           XXXXXXX,
+   KC_F12,   KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10, KC_KB_VOLUME_UP, KC_KB_VOLUME_DOWN,  KC_NUBS, KC_PMNS, KC_CAPS, XXXXXXX,  KC_PSLS,           XXXXXXX,
                              _______, _______, _______,         _______, _______,             KC_DEL, XXXXXXX, XXXXXXX
 ),
 /* NUMPAD
@@ -162,7 +162,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 /* ADJUST
  * ,-----------------------------------------.                    ,------------------------------------------.
- * |QWERTY|      |      |      |      |      |                    |COLEMAK |      |      |      |      |ADJUST|
+ * |QWERTY|      |      |      |      | NUMP |                    |COLEMAK |      |      |      |      |ADJUST|
  * |------+------+------+------+------+------|                    |--------+------+------+------+------+------|
  * |      |      |      |      |      |      |                    |        |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |--------+------+------+------+------+------|
@@ -175,7 +175,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   `----------------------------'           '------''--------------------'
  */
   [_ADJUST] = LAYOUT(
-          QWE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            COL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+          QWE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_NUM,                            COL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                        CMB_OFF, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,     CMB_ON, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -185,7 +185,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //DISPLAY RELATED
 
-  #define WPM 15 // Miñimun wpm for start )
+  #define WPM 15 // Minimun wpm for start )
   #define ANIM_FRAME_DURATION 200 // Frame time
   #define ANIM_SIZE_CAT 320 // Pixels in cat frames
 
