@@ -126,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |  F11 |  F1  |  F2  |  F3  |  F4  |  F5  |-------.    ,-------|   +  | LEFT | DOWN | RIGHT| CTRL |      |
  * |------+------+------+------+------+------| VOL + |    | VOL - |------+------+------+------+------+------|
- * |  F12 |  F6  |  F7  |  F8  |  F9  |  F10 |-------|    |-------|   |  |  -   | CAPS |      |      |      |
+ * |  F12 |  F6  |  F7  |  F8  |  F9  |  F10 |-------|    |-------|   |  |  -   | CAPS |      |  /   |      |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
  *                   | LAlt | LGUI |LOWER | /Space  /       \ Enter\  | DEL |      |      |
  *                   |      |      |      |/       /         \      \ |     |      |      |
@@ -163,7 +163,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 /* ADJUST
  * ,-----------------------------------------.                    ,------------------------------------------.
- * |QWERTY|      |      |      |      |      |                    |COLEMAK |      |      |      |      |ADJUST|
+ * |QWERTY|      |      |      |      | NUMP |                    |COLEMAK |      |      |      |      |ADJUST|
  * |------+------+------+------+------+------|                    |--------+------+------+------+------+------|
  * |      |      |      |      |      |      |                    |        |      |      |      |      |      |
  * |------+------+------+------+------+------|                    |--------+------+------+------+------+------|
@@ -176,7 +176,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   `----------------------------'           '------''--------------------'
  */
   [_ADJUST] = LAYOUT(
-          QWE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            COL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+          QWE, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  KC_NUM,                            COL, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                        CMB_OFF, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,   XXXXXXX, XXXXXXX,     CMB_ON, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
@@ -186,7 +186,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //DISPLAY RELATED
 
-  #define WPM 15 // Miñimun wpm for start )
+  #define WPM 15 // Minimun wpm for start )
   #define ANIM_FRAME_DURATION 200 // Frame time
   #define ANIM_SIZE_CAT 320 // Pixels in cat frames
 
